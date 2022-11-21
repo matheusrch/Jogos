@@ -1,6 +1,8 @@
 #include <SDL2/SDL.h>
 #include <stdlib.h>
 
+int AUX_WaitEventTimeoutCount(SDL_Event* evt, int* ms);
+
 int main (int argc, char* args[])
 {
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -15,7 +17,7 @@ int main (int argc, char* args[])
     SDL_Rect r = { 50,20, 10,10 };
     int espera = 200;
     while (1) {
-	    SDL_SetRenderDrawColor(ren, 0xFF,0xFF,0xFF,0x00);
+        SDL_SetRenderDrawColor(ren, 0xFF,0xFF,0xFF,0x00);
         SDL_RenderClear(ren);
         SDL_SetRenderDrawColor(ren, rand()%256,rand()%256,rand()%256,0x00);
         SDL_RenderFillRect(ren, &r);
@@ -24,21 +26,21 @@ int main (int argc, char* args[])
         SDL_Event evt;
         int isevt = AUX_WaitEventTimeoutCount(&evt, &espera);
         if (isevt && evt.type == SDL_QUIT) {
-        	break;
+            break;
         } else {
-			if (r.y == 20 && r.x <= 150) {
-				r.x += 2;
-			}
-			if (r.x == 150 && r.y <= 80) {
-			    r.y += 2;
-			}
-			if (r.y == 80 && r.x >= 50) {
-			    r.x -= 2;
-			}
-			if (r.x == 50 && r.y >= 20) {
-			    r.y -= 2;
-			}
-		}
+            if (r.y == 20 && r.x <= 150) {
+                r.x += 2;
+            }
+            if (r.x == 150 && r.y <= 80) {
+                r.y += 2;
+            }
+            if (r.y == 80 && r.x >= 50) {
+                r.x -= 2;
+            }
+            if (r.x == 50 && r.y >= 20) {
+                r.y -= 2;
+            }
+        }
     }
 
 
@@ -48,17 +50,16 @@ int main (int argc, char* args[])
 }
 
 int AUX_WaitEventTimeoutCount(SDL_Event* evt, int* ms) {
-	int antes = SDL_GetTicks();
-	int aux_isevt = SDL_WaitEventTimeout(evt, *ms);
-	if (aux_isevt) {
-		*ms -= (SDL_GetTicks() - antes);
-		if (*ms < 0) {
-			*ms = 0;
-		}
-		return 1;
-	} else {
-		*ms = 200;
-		return 0;
-	}
+    int antes = SDL_GetTicks();
+    int aux_isevt = SDL_WaitEventTimeout(evt, *ms);
+    if (aux_isevt) {
+        *ms -= (SDL_GetTicks() - antes);
+        if (*ms < 0) {
+            *ms = 0;
+        }
+        return 1;
+    } else {
+        *ms = 200;
+        return 0;
+    }
 }
-

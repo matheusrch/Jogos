@@ -1,5 +1,7 @@
 #include <SDL2/SDL.h>
 
+int AUX_WaitEventTimeoutCount(SDL_Event* evt, int* ms);
+
 int main (int argc, char* args[])
 {
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -22,8 +24,8 @@ int main (int argc, char* args[])
         SDL_RenderFillRect(ren, &r1);
         SDL_SetRenderDrawColor(ren, 0x00,0xFF,0x00,0x00);
         SDL_RenderFillRect(ren, &r2);
-		SDL_SetRenderDrawColor(ren, 0xFF,0x00,0x00,0x00);
-		SDL_RenderFillRect(ren, &r3);
+        SDL_SetRenderDrawColor(ren, 0xFF,0x00,0x00,0x00);
+        SDL_RenderFillRect(ren, &r3);
         SDL_RenderPresent(ren);
 
         SDL_Event evt;
@@ -46,7 +48,7 @@ int main (int argc, char* args[])
                 }
             }
             else if (evt.type == SDL_QUIT) {
-				break;
+                break;
             }
         } else {
             r1.x += 2;
@@ -62,17 +64,16 @@ int main (int argc, char* args[])
 }
 
 int AUX_WaitEventTimeoutCount(SDL_Event* evt, int* ms) {
-	int antes = SDL_GetTicks();
-	int aux_isevt = SDL_WaitEventTimeout(evt, *ms);
-	if (aux_isevt) {
-		*ms -= (SDL_GetTicks() - antes);
-		if (*ms < 0) {
-			*ms = 0;
-		}
-		return 1;
-	} else {
-		*ms = 500;
-		return 0;
-	}
+    int antes = SDL_GetTicks();
+    int aux_isevt = SDL_WaitEventTimeout(evt, *ms);
+    if (aux_isevt) {
+        *ms -= (SDL_GetTicks() - antes);
+        if (*ms < 0) {
+            *ms = 0;
+        }
+        return 1;
+    } else {
+        *ms = 500;
+        return 0;
+    }
 }
-

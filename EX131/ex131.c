@@ -14,22 +14,22 @@ int main (int argc, char* args[])
 
     SDL_Rect r = { 50,20, 10,10 };
     while (1) {
-	    SDL_SetRenderDrawColor(ren, 0xFF,0xFF,0xFF,0x00);
+        SDL_SetRenderDrawColor(ren, 0xFF,0xFF,0xFF,0x00);
         SDL_RenderClear(ren);
         SDL_SetRenderDrawColor(ren, rand()%256,rand()%256,rand()%256,0x00);
         SDL_RenderFillRect(ren, &r);
-    	if (r.y == 20 && r.x <= 150) {
-    		r.x += 2;
-    	}
-    	if (r.x == 150 && r.y <= 80) {
-    	    r.y += 2;
-    	}
-    	if (r.y == 80 && r.x >= 50) {
-    	    r.x -= 2;
-    	}
-    	if (r.x == 50 && r.y >= 20) {
-    	    r.y -= 2;
-    	}
+        if (r.y == 20 && r.x <= 150) {
+            r.x += 2;
+        }
+        if (r.x == 150 && r.y <= 80) {
+            r.y += 2;
+        }
+        if (r.y == 80 && r.x >= 50) {
+            r.x -= 2;
+        }
+        if (r.x == 50 && r.y >= 20) {
+            r.y -= 2;
+        }
         
         SDL_RenderPresent(ren);
         SDL_Delay(200);
@@ -40,4 +40,3 @@ int main (int argc, char* args[])
     SDL_DestroyWindow(win);
     SDL_Quit();
 }
-

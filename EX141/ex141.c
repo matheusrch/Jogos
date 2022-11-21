@@ -1,6 +1,13 @@
 #include <SDL2/SDL.h>
 #include <stdlib.h>
 
+typedef struct {
+    SDL_Rect ret;
+    int R;
+    int G;
+    int B;
+} retangulo;
+
 int main (int argc, char* args[])
 {
     /* INICIALIZACAO */
@@ -14,46 +21,55 @@ int main (int argc, char* args[])
 
     /* EXECUCAO */
     SDL_Rect r = { 40,20, 10,10 };
-    SDL_Rect rArray[10];
-    int R[10], G[10], B[10];
+    retangulo rArray[10];
     int i = 0;
     SDL_Event evt;
-    while (1) {
+    int running = SDL_TRUE;
+    while (running) {
         SDL_SetRenderDrawColor(ren, 0xFF,0xFF,0xFF,0x00);
         SDL_RenderClear(ren);
         for (int j = 0; j < i; j++) {
-            SDL_SetRenderDrawColor(ren, R[j], G[j], B[j], 255);
-            SDL_RenderFillRect(ren, &rArray[j]);
+            SDL_SetRenderDrawColor(ren, rArray[j].R, rArray[j].G, rArray[j].B, 255);
+            SDL_RenderFillRect(ren, &rArray[j].ret);
         }
         SDL_SetRenderDrawColor(ren, 0x00,0x00,0xFF,0x00);
         SDL_RenderFillRect(ren, &r);
         SDL_RenderPresent(ren);
         SDL_WaitEvent(&evt);
-        if (evt.type == SDL_KEYDOWN) {
-            switch (evt.key.keysym.sym) {
-                case SDLK_UP:
-		    		if (r.y - 5 >= 0) r.y -= 5;
-                    break;
-                case SDLK_DOWN:
-                    if (r.y + 5 < 95) r.y += 5;
-                    break;
-                case SDLK_LEFT:
-                    if (r.x - 5 >= 0) r.x -= 5;
-                    break;
-                case SDLK_RIGHT:
-                    if (r.x + 5 < 195) r.x += 5;
-                    break;
-            }
+        switch (evt.type) {
+            case SDL_KEYDOWN:
+                switch (evt.key.keysym.sym) {
+                    case SDLK_UP:
+                        if (r.y - 5 >= 0) r.y -= 5;
+                        break;
+                    case SDLK_DOWN:
+                        if (r.y + 5 < 95) r.y += 5;
+                        break;
+                    case SDLK_LEFT:
+                        if (r.x - 5 >= 0) r.x -= 5;
+                        break;
+                    case SDLK_RIGHT:
+                        if (r.x + 5 < 195) r.x += 5;
+                        break;
+                }
+                break;
+
+            case SDL_MOUSEBUTTONDOWN:
+                if (i == 10) break;
+                rArray[i].ret.x = evt.button.x;
+                rArray[i].ret.y = evt.button.y;
+                rArray[i].ret.w = rand() % 100;
+                rArray[i].ret.h = rand() % 50;
+                rArray[i].R = rand() % 256;
+                rArray[i].G = rand() % 256;
+                rArray[i].B = rand() % 256;
+                printf("Retângulo %d\n", ++i);
+                break;
+
+            case SDL_QUIT:
+                running = SDL_FALSE;
+                break;
         }
-		else if (evt.type == SDL_MOUSEBUTTONDOWN && i < 10) {
-    		rArray[i].x = evt.button.x; rArray[i].y = evt.button.y;
-    		rArray[i].w = rand() % 100; rArray[i].h = rand() % 50;
-    		R[i] = rand() % 256; G[i] = rand() % 256; B[i] = rand() % 256;
-			printf("Retângulo %d\n", ++i);
-		}
-		else if (evt.type == SDL_QUIT) {
-	    	break;
-		}
     }
 
     /* FINALIZACAO */
@@ -61,4 +77,3 @@ int main (int argc, char* args[])
     SDL_DestroyWindow(win);
     SDL_Quit();
 }
-
