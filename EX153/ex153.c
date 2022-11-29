@@ -3,6 +3,11 @@
 
 int AUX_WaitEventTimeoutCount(SDL_Event* evt, int* ms);
 
+typedef struct {
+    SDL_Rect r;
+    int R, G, B;
+} retangulo;
+
 int main (int argc, char* args[])
 {
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -14,32 +19,37 @@ int main (int argc, char* args[])
     SDL_Renderer* ren = SDL_CreateRenderer(win, -1, 0);
 
 
-    SDL_Rect r = { 50,20, 10,10 };
+    retangulo ret;
+    ret.r = (SDL_Rect) { 50,20, 10,10 };
     int espera = 200;
     while (1) {
         SDL_SetRenderDrawColor(ren, 0xFF,0xFF,0xFF,0x00);
         SDL_RenderClear(ren);
-        SDL_SetRenderDrawColor(ren, rand()%256,rand()%256,rand()%256,0x00);
-        SDL_RenderFillRect(ren, &r);
+        SDL_SetRenderDrawColor(ren, ret.R,ret.G,ret.B,0x00);
+        SDL_RenderFillRect(ren, &ret.r);
         SDL_RenderPresent(ren);
         
         SDL_Event evt;
         int isevt = AUX_WaitEventTimeoutCount(&evt, &espera);
-        if (isevt && evt.type == SDL_QUIT) {
+        if (!isevt) {
+            espera = 200;
+            ret.R = rand()%256;
+            ret.G = rand()%256;
+            ret.B = rand()%256;
+            if (ret.r.y == 20 && ret.r.x <= 150) {
+                ret.r.x += 2;
+            }
+            if (ret.r.x == 150 && ret.r.y <= 80) {
+                ret.r.y += 2;
+            }
+            if (ret.r.y == 80 && ret.r.x >= 50) {
+                ret.r.x -= 2;
+            }
+            if (ret.r.x == 50 && ret.r.y >= 20) {
+                ret.r.y -= 2;
+            }
+        } else if (evt.type == SDL_QUIT) {
             break;
-        } else {
-            if (r.y == 20 && r.x <= 150) {
-                r.x += 2;
-            }
-            if (r.x == 150 && r.y <= 80) {
-                r.y += 2;
-            }
-            if (r.y == 80 && r.x >= 50) {
-                r.x -= 2;
-            }
-            if (r.x == 50 && r.y >= 20) {
-                r.y -= 2;
-            }
         }
     }
 
@@ -59,7 +69,6 @@ int AUX_WaitEventTimeoutCount(SDL_Event* evt, int* ms) {
         }
         return 1;
     } else {
-        *ms = 200;
         return 0;
     }
 }

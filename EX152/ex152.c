@@ -10,7 +10,6 @@ int AUX_WaitEventTimeoutCount(SDL_Event* evt, int* ms) {
         }
         return 1;
     } else {
-        *ms = 500;
         return 0;
     }
 }
